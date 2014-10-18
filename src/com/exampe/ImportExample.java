@@ -20,7 +20,7 @@ public class ImportExample {
         ArrayList pipeList = new ArrayList();
 
         // Read data from File objects
-        pipeList.add(new Input2CharSequence("cp1251"));
+        pipeList.add(new Input2CharSequence("UTF-8"));
 
         // Regular expression for what constitutes a token.
         //  This pattern includes Unicode letters, Unicode numbers,
@@ -32,11 +32,11 @@ public class ImportExample {
         Pattern tokenPattern =
                 Pattern.compile("[\\p{L}\\p{N}_]+" );
 
-        // Tokenize raw strings
-        pipeList.add(new CharSequence2TokenSequence(tokenPattern));
+//        pipeList.add(new CharSequenceLowercase());
 
-        // Normalize all tokens to all lowercase
-        pipeList.add(new TokenSequenceLowercase());
+        // Tokenize raw strings
+        pipeList.add(new CharSequence2CharNGramsFixed(2, false));
+
 
         // Remove stopwords from a standard English stoplist.
         //  options: [case sensitive] [mark deletions]
@@ -56,7 +56,7 @@ public class ImportExample {
         pipeList.add(new FeatureSequence2FeatureVector());
 
         // Print out the features and the label
-        pipeList.add(new PrintInputAndTarget());
+//        pipeList.add(new PrintInputAndTarget());
 
         return new SerialPipes(pipeList);
     }

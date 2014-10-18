@@ -4,6 +4,7 @@ import cc.mallet.classify.Classifier;
 import cc.mallet.classify.ClassifierTrainer;
 import cc.mallet.classify.MaxEntTrainer;
 import cc.mallet.classify.NaiveBayesTrainer;
+import cc.mallet.pipe.Pipe;
 import cc.mallet.pipe.iterator.CsvIterator;
 import cc.mallet.types.Instance;
 import cc.mallet.types.InstanceList;
@@ -18,16 +19,15 @@ import java.util.Iterator;
  */
 public class Main {
 
-    public static void main(String[] args) {
-        String dataDirectory = "data";
+    public static void main(String[] args) throws IOException, ClassNotFoundException {
+        ClassifierBuilder builder = new ClassifierBuilder();
+//        builder.build();
 
-        ImportExample importer = new ImportExample();
-        InstanceList instances = importer.readDirectory(new File(dataDirectory));
+        Classifier classifier = builder.loadClassifier();
 
-        Classifier classifier = new Main().trainClassifier(instances);
-
-        classify(classifier, "факап");
-
+        long start = System.currentTimeMillis();
+        classify(classifier, "importante");
+        System.out.println(System.currentTimeMillis() - start);
     }
 
     public static void classify(Classifier classifier, String text)
@@ -59,72 +59,6 @@ public class Main {
         return trainer.train(trainingInstances);
     }
 
-    public Classifier loadClassifier(File serializedFile)
-            throws FileNotFoundException, IOException, ClassNotFoundException {
 
-        // The standard way to save classifiers and Mallet data
-        //  for repeated use is through Java serialization.
-        // Here we load a serialized classifier from a file.
 
-        Classifier classifier;
-
-        ObjectInputStream ois =
-                new ObjectInputStream (new FileInputStream(serializedFile));
-        classifier = (Classifier) ois.readObject();
-        ois.close();
-
-        return classifier;
-    }
-
-    public void saveClassifier(Classifier classifier, File serializedFile)
-            throws IOException {
-
-        // The standard method for saving classifiers in
-        //  Mallet is through Java serialization. Here we
-        //  write the classifier object to the specified file.
-
-        ObjectOutputStream oos =
-                new ObjectOutputStream(new FileOutputStream (serializedFile));
-        oos.writeObject (classifier);
-        oos.close();
-    }
-
-    public void printLabelings(Classifier classifier, File file) throws IOException {
-
-        // Create a new iterator that will read raw instance data from
-        //  the lines of a file.
-        // Lines should be formatted as:
-        //
-        //   [name] [label] [data ... ]
-        //
-        //  in this case, "label" is ignored.
-
-        CsvIterator reader =
-                new CsvIterator(new FileReader(file),
-                        "(\\w+)\\s+(\\w+)\\s+(.*)",
-                        3, 2, 1);  // (data, label, name) field indices
-
-        // Create an iterator that will pass each instance through
-        //  the same pipe that was used to create the training data
-        //  for the classifier.
-        Iterator instances =
-                classifier.getInstancePipe().newIteratorFrom(reader);
-
-        // Classifier.classify() returns a Classification object
-        //  that includes the instance, the classifier, and the
-        //  classification results (the labeling). Here we only
-        //  care about the Labeling.
-        while (instances.hasNext()) {
-            Labeling labeling = classifier.classify(instances.next()).getLabeling();
-
-            // print the labels with their weights in descending order (ie best first)
-
-            for (int rank = 0; rank < labeling.numLocations(); rank++){
-                System.out.print(labeling.getLabelAtRank(rank) + ":" +
-                        labeling.getValueAtRank(rank) + " ");
-            }
-            System.out.println();
-
-        }
-    }
 }

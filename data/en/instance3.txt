@@ -1,1 +1,0 @@
-The following is an example of a class implementing Optimizable.ByGradientValue. This class implements a very simple quadratic function in two variables.

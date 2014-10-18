@@ -1,1 +1,0 @@
-If you require greater flexibility than the command-line data import tools offer or you would like to embed MALLET into a larger application, it is useful to understand the MALLET data import API. This API is based around two types of classes: data, in the form of Instance objects contained in InstanceList objects; and classes that operate on data, iterators and pipes.

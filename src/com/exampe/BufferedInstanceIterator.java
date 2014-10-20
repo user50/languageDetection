@@ -30,8 +30,7 @@ public class BufferedInstanceIterator implements Iterator<InstanceList> {
     public InstanceList next() {
         InstanceList list = new InstanceList(pipe, bufferSize);
 
-        int count = 0;
-        while (count < bufferSize && instanceIterator.hasNext())
+        while ( instanceIterator.hasNext())
             list.add(instanceIterator.next());
 
         return list;

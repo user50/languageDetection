@@ -26,7 +26,7 @@ public class Main {
         Classifier classifier = builder.loadClassifier();
 
         long start = System.currentTimeMillis();
-        classify(classifier, "importante");
+        classify(classifier, "день вчора був холодний");
         System.out.println(System.currentTimeMillis() - start);
     }
 

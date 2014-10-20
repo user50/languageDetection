@@ -50,7 +50,11 @@ public class PreProcessing {
 
         while ( (line = reader.readLine()) != null)
         {
-            String text = line.split("\t")[1];
+            String[] rows = line.split("\t");
+            if (rows.length < 2)
+                continue;
+
+            String text = rows[1];
             if (text.length() < 5)
                 continue;
 

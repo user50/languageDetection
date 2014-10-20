@@ -25,10 +25,12 @@ public class ClassifierBuilder {
         Iterator<Instance> instanceIterator = getInstanceIterator(pipe, new File(SOURCE));
         BufferedInstanceIterator iterator = new BufferedInstanceIterator(instanceIterator, pipe, 1000 );
 
+        int count = 0;
         Classifier classifier = null;
         while (iterator.hasNext()) {
             ClassifierTrainer trainer = classifier == null ? new NaiveBayesTrainer() : new NaiveBayesTrainer((cc.mallet.classify.NaiveBayes) classifier);
             classifier = trainer.train(iterator.next());
+            System.out.println(++count);
         }
 
         saveClassifier(classifier, new File(classifierFileName));
